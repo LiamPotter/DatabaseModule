@@ -11,7 +11,7 @@ public class DataBaseObject:MonoBehaviour{
     [HideInInspector]
     public string oDescription;
     [HideInInspector]
-    public short oIndexNumber;
+    public int oIndexNumber;
     [HideInInspector]
     public int oDiet;//0 for Omnivore, 1 for Herbivore, 2 for Carnivore
     [HideInInspector]
