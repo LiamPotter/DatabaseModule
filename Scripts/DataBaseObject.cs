@@ -11,15 +11,12 @@ public class DataBaseObject:MonoBehaviour{
     [HideInInspector]
     public string oDescription;
     [HideInInspector]
-    public short oIndexNumber;
+    public int oIndexNumber;
     [HideInInspector]
     public int oDiet;//0 for Omnivore, 1 for Herbivore, 2 for Carnivore
     [HideInInspector]
-    public bool oPassive;
-    [HideInInspector]
-    public bool oAggresive;
-    [HideInInspector]
-    public bool oDocile;
+    public int oBehaviourNumber;//0 for Passive, 1 for Aggressive, 2 for Docile
+  
 
   //  public struct objStruct
   //  {

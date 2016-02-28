@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class DataBaseMain : MonoBehaviour {
-    public List<DataBaseObject> dObjectsListRaw;
+    public List<DataBaseObject> dObjectsList;
     
     public void Start()
     {
@@ -12,10 +12,10 @@ public class DataBaseMain : MonoBehaviour {
         //Finding all of the DataBaseObjects in the scene
         for (int i = 0; i < FindObjectsOfType<DataBaseObject>().Length; i++)
         {
-            dObjectsListRaw.Add(FindObjectsOfType<DataBaseObject>()[i]);
+            dObjectsList.Add(FindObjectsOfType<DataBaseObject>()[i]);
         }  
         //Sorting the List by the oName variable in each DataBaseObject
-        dObjectsListRaw.Sort(delegate (DataBaseObject x, DataBaseObject y)
+        dObjectsList.Sort(delegate (DataBaseObject x, DataBaseObject y)
         {
             if (x.oName == null && y.oName == null) return 0;
             else if (x.oName == null) return -1;
@@ -24,12 +24,16 @@ public class DataBaseMain : MonoBehaviour {
         });
         //Removing all duplicates in the list by comparing the oName variables on each DataBaseObject in the List
         short index = 0;
-        while (index < dObjectsListRaw.Count - 1)
+        while (index < dObjectsList.Count - 1)
         {
-            if (dObjectsListRaw[index].oName == dObjectsListRaw[index + 1].oName)
-                dObjectsListRaw.RemoveAt(index);
+            if (dObjectsList[index].oName == dObjectsList[index + 1].oName)
+                dObjectsList.RemoveAt(index);
             else
                 index++;
+        }
+        for (int i = 0; i < dObjectsList.Count; i++)
+        {
+            dObjectsList[i].oIndexNumber = i;
         }
 
 
