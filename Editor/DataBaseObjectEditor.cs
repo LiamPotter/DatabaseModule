@@ -10,10 +10,13 @@ public class DataBaseObjectEditor : Editor {
     //and makes it easier to quickly add new objects
 
     private int dietIndex;
+    private int behaviourIndex;
     //Will hide the Fauna options if 0, will display if 1
     private int hidingFuanaInt;
     //The three different Diet Options 
     private string[] dietOptions = new string[] {"Omnivore","Herbivore","Carnivore"};
+    //The three different Behaviour Options
+    private string[] behaviourOptions = new string[] { "Passive", "Aggressive", "Docile" };
     public override void OnInspectorGUI()
     {
         DataBaseObject thisDataBaseObject = (DataBaseObject)target;
@@ -31,9 +34,11 @@ public class DataBaseObjectEditor : Editor {
         if (EditorGUILayout.BeginFadeGroup(hidingFuanaInt))
         {
             dietIndex = EditorGUILayout.Popup("Diet", dietIndex, dietOptions);
+            behaviourIndex = EditorGUILayout.Popup("Behaviour", behaviourIndex, behaviourOptions);
         }
         EditorGUILayout.EndFadeGroup();
         thisDataBaseObject.oDiet = dietIndex;
+        thisDataBaseObject.oBehaviourNumber = behaviourIndex;
         //This is SUPPOSSED to make the bools toggle eachother, but only by toggling flora will make it work right now
         if (thisDataBaseObject.oFlora == true)
             thisDataBaseObject.oFuana = false;   
