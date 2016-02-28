@@ -4,16 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class DataBaseMain : MonoBehaviour {
+    //This list hold the gameobjects that are scanned from the scene
+    [HideInInspector]
     public List<DataBaseObject> dObjectsList;
-    
+
+    public List<DataBaseObject> dObjectsFaunaList;
+
+    public List<DataBaseObject> dObjectsFloraList;
+
     public void Start()
     {
-        
-        //Finding all of the DataBaseObjects in the scene
-        for (int i = 0; i < FindObjectsOfType<DataBaseObject>().Length; i++)
-        {
-            dObjectsList.Add(FindObjectsOfType<DataBaseObject>()[i]);
-        }  
+
+        FindAllDatabaseObjects(dObjectsList);
         //Sorting the List by the oName variable in each DataBaseObject
         dObjectsList.Sort(delegate (DataBaseObject x, DataBaseObject y)
         {
@@ -33,11 +35,25 @@ public class DataBaseMain : MonoBehaviour {
         }
         for (int i = 0; i < dObjectsList.Count; i++)
         {
+            if (dObjectsList[i].oFuana)
+            {
+                dObjectsFaunaList.Add(dObjectsList[i]);
+            }
+            if (dObjectsList[i].oFlora)
+            {
+                dObjectsFloraList.Add(dObjectsList[i]);
+            }
             dObjectsList[i].oIndexNumber = i;
         }
 
-
-
+    }
+    public static void FindAllDatabaseObjects(List<DataBaseObject> dObjectsTemp)
+    {
+        //Finding all of the DataBaseObjects in the scene
+        for (int i = 0; i < FindObjectsOfType<DataBaseObject>().Length; i++)
+        {
+            dObjectsTemp.Add(FindObjectsOfType<DataBaseObject>()[i]);
+        }
     }
 	
 }
