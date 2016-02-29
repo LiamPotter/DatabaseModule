@@ -11,8 +11,13 @@ public class DataBaseObjectEditor : Editor {
 
     private int dietIndex;
     private int behaviourIndex;
+  
     //Will hide the Fauna options if 0, will display if 1
     private int hidingFuanaInt;
+    //The three Object Types
+    private string[] objectTypes = new string[] { "Flora", "Fuana", "Mineral" };
+    //This int will be 0 for Flora, 1 for Fuana and 2 for Mineral
+    private int selectedObjectType;
     //The three different Diet Options 
     private string[] dietOptions = new string[] {"Omnivore","Herbivore","Carnivore"};
     //The three different Behaviour Options
@@ -22,11 +27,21 @@ public class DataBaseObjectEditor : Editor {
         DataBaseObject thisDataBaseObject = (DataBaseObject)target;
         thisDataBaseObject.oName=EditorGUILayout.TextField("Name",thisDataBaseObject.oName);
         thisDataBaseObject.oDescription = EditorGUILayout.TextField("Description", thisDataBaseObject.oDescription);
-        thisDataBaseObject.oFlora = EditorGUILayout.Toggle("Flora", thisDataBaseObject.oFlora);
-        thisDataBaseObject.oFuana = EditorGUILayout.Toggle("Fuana", thisDataBaseObject.oFuana);
-
+        selectedObjectType = EditorGUILayout.Popup("Object Type", selectedObjectType, objectTypes);
+        
+        //Sets the various bools based on the SelectedObjectType variable
+        if (selectedObjectType == 0)
+            thisDataBaseObject.oFlora = true;
+        else thisDataBaseObject.oFlora = false;
+        if (selectedObjectType == 1)
+            thisDataBaseObject.oFuana = true;
+        else thisDataBaseObject.oFuana = false;
+        if (selectedObjectType == 2)
+            thisDataBaseObject.oMineral = true;
+        else thisDataBaseObject.oMineral = false;
+        Debug.Log(hidingFuanaInt);
         //This will hide the Diet Popup if the object is a plant, because plants do eat things... usually
-        if (thisDataBaseObject.oFlora)
+        if (thisDataBaseObject.oFlora||thisDataBaseObject.oMineral)
         {
             hidingFuanaInt = 0;
         }
@@ -45,8 +60,8 @@ public class DataBaseObjectEditor : Editor {
         if (thisDataBaseObject.oFlora == false)
             thisDataBaseObject.oFuana = true;
      
-
         EditorGUILayout.LabelField("Index Number", thisDataBaseObject.oIndexNumber.ToString());
+        thisDataBaseObject.oSeenByPlayer = EditorGUILayout.Toggle("Seen By Player?", thisDataBaseObject.oSeenByPlayer);
         base.OnInspectorGUI();
     }
    
