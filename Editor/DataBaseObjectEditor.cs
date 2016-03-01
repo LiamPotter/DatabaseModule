@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEditor;
 
+
 [CustomEditor(typeof(DataBaseObject))]
 public class DataBaseObjectEditor : Editor {
 
@@ -10,43 +11,43 @@ public class DataBaseObjectEditor : Editor {
     //and makes it easier to quickly add new objects
 
     private int dietIndex;
+
     private int behaviourIndex;
   
     //Will hide the Fauna options if 0, will display if 1
-    private int hidingFuanaInt;
+    private int hidingFaunaInt;
     //The three Object Types
-    private string[] objectTypes = new string[] { "Flora", "Fuana", "Mineral" };
+    private string[] objectTypes = new string[] { "Flora", "Fauna", "Mineral" };
     //This int will be 0 for Flora, 1 for Fuana and 2 for Mineral
-    private int selectedObjectType;
+    public int selectedObjectType;
     //The three different Diet Options 
     private string[] dietOptions = new string[] {"Omnivore","Herbivore","Carnivore"};
     //The three different Behaviour Options
     private string[] behaviourOptions = new string[] { "Passive", "Aggressive", "Docile" };
+    private DataBaseObject thisDataBaseObject;
+    void OnEnable()
+    {
+        thisDataBaseObject = (DataBaseObject)target;
+        selectedObjectType = thisDataBaseObject.oObjectType;
+        dietIndex = thisDataBaseObject.oDiet;
+        behaviourIndex = thisDataBaseObject.oBehaviourNumber;
+    }
     public override void OnInspectorGUI()
     {
-        DataBaseObject thisDataBaseObject = (DataBaseObject)target;
+        
         thisDataBaseObject.oName=EditorGUILayout.TextField("Name",thisDataBaseObject.oName);
         thisDataBaseObject.oDescription = EditorGUILayout.TextField("Description", thisDataBaseObject.oDescription);
         selectedObjectType = EditorGUILayout.Popup("Object Type", selectedObjectType, objectTypes);
-        
+
         //Sets the various bools based on the SelectedObjectType variable
-        if (selectedObjectType == 0)
-            thisDataBaseObject.oFlora = true;
-        else thisDataBaseObject.oFlora = false;
-        if (selectedObjectType == 1)
-            thisDataBaseObject.oFuana = true;
-        else thisDataBaseObject.oFuana = false;
-        if (selectedObjectType == 2)
-            thisDataBaseObject.oMineral = true;
-        else thisDataBaseObject.oMineral = false;
-        Debug.Log(hidingFuanaInt);
+        thisDataBaseObject.oObjectType = selectedObjectType;
         //This will hide the Diet Popup if the object is a plant, because plants do eat things... usually
-        if (thisDataBaseObject.oFlora||thisDataBaseObject.oMineral)
+        if (selectedObjectType!=1)
         {
-            hidingFuanaInt = 0;
+            hidingFaunaInt = 0;
         }
-        else hidingFuanaInt = 1;
-        if (EditorGUILayout.BeginFadeGroup(hidingFuanaInt))
+        else hidingFaunaInt = 1;
+        if (EditorGUILayout.BeginFadeGroup(hidingFaunaInt))
         {
             dietIndex = EditorGUILayout.Popup("Diet", dietIndex, dietOptions);
             behaviourIndex = EditorGUILayout.Popup("Behaviour", behaviourIndex, behaviourOptions);
@@ -54,13 +55,9 @@ public class DataBaseObjectEditor : Editor {
         EditorGUILayout.EndFadeGroup();
         thisDataBaseObject.oDiet = dietIndex;
         thisDataBaseObject.oBehaviourNumber = behaviourIndex;
-        //This is SUPPOSSED to make the bools toggle eachother, but only by toggling flora will make it work right now
-        if (thisDataBaseObject.oFlora == true)
-            thisDataBaseObject.oFuana = false;   
-        if (thisDataBaseObject.oFlora == false)
-            thisDataBaseObject.oFuana = true;
-     
+
         EditorGUILayout.LabelField("Index Number", thisDataBaseObject.oIndexNumber.ToString());
+        EditorGUILayout.LabelField("ObectType", thisDataBaseObject.oObjectType.ToString());
         thisDataBaseObject.oSeenByPlayer = EditorGUILayout.Toggle("Seen By Player?", thisDataBaseObject.oSeenByPlayer);
         base.OnInspectorGUI();
     }

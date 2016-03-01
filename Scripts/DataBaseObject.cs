@@ -2,12 +2,16 @@
 using System.Collections;
 
 public class DataBaseObject:MonoBehaviour{
+    /*
     [HideInInspector]
     public bool oFlora;
     [HideInInspector]
     public bool oFuana;
     [HideInInspector]
     public bool oMineral;
+    */
+    [HideInInspector]
+    public int oObjectType;//0 for Flora, 1 for Fauna, 2 for Mineral
     [HideInInspector]
     public string oName;
     [HideInInspector]
@@ -21,12 +25,6 @@ public class DataBaseObject:MonoBehaviour{
     [HideInInspector]
     public bool oSeenByPlayer;//Whether or not the player has 'scanned' the object
 
-  //  public struct objStruct
-  //  {
-  //      public string name;
-  //      public string scientificName;
-  //  }
-   
-   
+ 
   
 }

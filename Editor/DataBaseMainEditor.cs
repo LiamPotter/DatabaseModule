@@ -8,6 +8,7 @@ public class DataBaseMainEditor : Editor {
 
     private bool floraOpen;
     private bool fuanaOpen;
+    private bool mineralOpen;
     //private bool[] floraInfoBools;
     public override void OnInspectorGUI()
     {
@@ -35,6 +36,17 @@ public class DataBaseMainEditor : Editor {
                 EditorGUI.indentLevel = 2;
                 EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsFaunaList[i].oName);
                 Debug.Log("testForFuanaOpening");
+            }
+        }
+        EditorGUI.indentLevel = 1;
+        mineralOpen = EditorGUILayout.Foldout(mineralOpen, "Minerals");
+        if(mineralOpen)
+        {
+            for (int i = 0; i < thisDataBaseMain.dObjectsMineralList.Count; i++)
+            {
+                EditorGUI.indentLevel = 2;
+                EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsMineralList[i].oName);
+                Debug.Log("testForMineralsOpening");
             }
         }
     }
