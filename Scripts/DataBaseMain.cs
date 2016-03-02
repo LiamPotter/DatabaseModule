@@ -13,8 +13,12 @@ public class DataBaseMain : MonoBehaviour {
     public List<DataBaseObject> dObjectsFaunaList;
 
     public List<DataBaseObject> dObjectsMineralList;
+
+    public GameObject dataBaseCanvasInvis;
     public void Start()
     {
+        dataBaseCanvasInvis = GameObject.Find("DatabaseUIPanelInvis");
+        ResetAllDatabases(dObjectsList, dObjectsFloraList, dObjectsFaunaList, dObjectsMineralList, dataBaseCanvasInvis);
         //Finding all of the DataBaseObjects in the scene
         FindAllDatabaseObjects(dObjectsList);
         //Sorting the List by the oName variable in each DataBaseObject
@@ -23,8 +27,25 @@ public class DataBaseMain : MonoBehaviour {
         AddObjectsToSubLists(dObjectsList, dObjectsFloraList, dObjectsFaunaList, dObjectsMineralList);
         //Removing all duplicates in the list by comparing the oName variables on each DataBaseObject in the List
         RemoveDuplicatesInDataBases(dObjectsList,dObjectsFloraList,dObjectsFaunaList,dObjectsMineralList);
-      
+        //Adding all objects in the database to their respective UI elements
+        InstantiateUIElements(dObjectsList,dataBaseCanvasInvis);
+    }
+    public static void ResetAllDatabases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp,GameObject invisCanvas)
+    {
+        if (invisCanvas == null)
+            invisCanvas = GameObject.Find("DatabaseUIPanelInvis");
+        for (int i = 0; i < dObjectsTemp.Count; i++)
+        {
+            dObjectsTemp[i].oIndexNumber = 0;
+        }
+        dObjectsTemp.Clear();
+        dObjectsFloraTemp.Clear();
+        dObjectsFaunaTemp.Clear();
+        dObjectsMineralTemp.Clear();
 
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in invisCanvas.transform) children.Add(child.gameObject);
+        children.ForEach(child => DestroyImmediate(child));
     }
     public static void FindAllDatabaseObjects(List<DataBaseObject> dObjectsTemp)
     {
@@ -61,7 +82,7 @@ public class DataBaseMain : MonoBehaviour {
             {
                 dObjectsMineralTemp.Add(dObjectsTemp[i]);
             }
-            dObjectsTemp[i].oIndexNumber = i;
+            dObjectsTemp[i].oIndexNumber = 1+i;
         }
     }
     public static void RemoveDuplicatesInDataBases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp)
@@ -97,6 +118,39 @@ public class DataBaseMain : MonoBehaviour {
                 dObjectsMineralTemp.RemoveAt(indexMin);
             else
                 indexMin++;
+        }
+    }
+    public static void InstantiateUIElements(List<DataBaseObject> dObjectsTemp,GameObject canvas)
+    {
+        if(canvas==null)
+        {
+            canvas = GameObject.Find("DatabaseUIPanelInvis");
+        }
+        int paddingInt = 100;
+        for (int i = 0; i < dObjectsTemp.Count; i++)
+        {
+            if (dObjectsTemp[i].oUIObject == null)
+            {
+                dObjectsTemp[i].oUIObject = (GameObject)Instantiate(dObjectsTemp[i].oUIPrefab);
+                dObjectsTemp[i].oUIObject.transform.SetParent(canvas.transform);
+                dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1156);
+                dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 90);
+                dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                if (dObjectsTemp[i] == dObjectsTemp[0])
+                    dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-277, -175, 0);
+                else
+                {
+                    dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-277, -175-paddingInt*i, 0);
+                }
+               
+                dObjectsTemp[i].oUIObject.name = dObjectsTemp[i].oName + " UI";
+                dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().FindAllNeededUIElements();
+                if (dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().foundAllElements)
+                {
+                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uName.text = dObjectsTemp[i].oName;
+                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uIndexNumber.text = dObjectsTemp[i].oIndexNumber.ToString()+" :";
+                }
+            }
         }
     }
 }

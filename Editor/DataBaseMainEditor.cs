@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 
 [CustomEditor(typeof(DataBaseMain))]
@@ -9,16 +10,13 @@ public class DataBaseMainEditor : Editor {
     private bool floraOpen;
     private bool faunaOpen;
     private bool mineralOpen;
-    //private bool[] floraInfoBools;
+    private DataBaseMain thisDataBaseMain;
     public override void OnInspectorGUI()
     {
-        DataBaseMain thisDataBaseMain = (DataBaseMain)target;
-        //floraInfoBools = new bool[thisDataBaseMain.dObjectsFloraList.Count];
-        //EditorGUILayout.PrefixLabel("Database Objects");
+        thisDataBaseMain = (DataBaseMain)target;
         GUILayout.Label("Database Objects");
         EditorGUI.indentLevel = 1;
         floraOpen =EditorGUILayout.Foldout(floraOpen, "Flora");
-        // int[] floraInfoInts = new int[thisDataBaseMain.dObjectsFloraList.Count];
         if (floraOpen)
         {
             for (int i = 0; i < thisDataBaseMain.dObjectsFloraList.Count; i++)
@@ -60,14 +58,26 @@ public class DataBaseMainEditor : Editor {
             DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsFaunaList);
             DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsMineralList);
             DataBaseMain.RemoveDuplicatesInDataBases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsMineralList);
+            floraOpen = true;
+            faunaOpen = true;
+            mineralOpen = true;
             Debug.Log("HitButton");
         }
-        if (GUILayout.Button("Reset Databases"))
+        if (GUILayout.Button("Instantiate UI"))
         {
-            thisDataBaseMain.dObjectsList.Clear();
-            thisDataBaseMain.dObjectsFloraList.Clear();
-            thisDataBaseMain.dObjectsFaunaList.Clear();
-            thisDataBaseMain.dObjectsMineralList.Clear();
+            DataBaseMain.InstantiateUIElements(thisDataBaseMain.dObjectsList,thisDataBaseMain.dataBaseCanvasInvis);
+        }
+        if (GUILayout.Button("Reset UI"))
+        {
+            if (thisDataBaseMain.dataBaseCanvasInvis == null)
+                thisDataBaseMain.dataBaseCanvasInvis = GameObject.Find("DatabaseUIPanelInvis");
+            List<GameObject> children = new List<GameObject>();
+            foreach (Transform child in thisDataBaseMain.dataBaseCanvasInvis.transform) children.Add(child.gameObject);
+            children.ForEach(child => DestroyImmediate(child));
+        }
+        if (GUILayout.Button("Reset Everything"))
+        {
+            DataBaseMain.ResetAllDatabases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsMineralList, thisDataBaseMain.dataBaseCanvasInvis);
         }
     }
    

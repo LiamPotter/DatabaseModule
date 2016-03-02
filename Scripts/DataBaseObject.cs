@@ -2,14 +2,10 @@
 using System.Collections;
 
 public class DataBaseObject:MonoBehaviour{
-    /*
-    [HideInInspector]
-    public bool oFlora;
-    [HideInInspector]
-    public bool oFuana;
-    [HideInInspector]
-    public bool oMineral;
-    */
+
+    //[HideInInspector]
+    public GameObject oUIPrefab;
+    public GameObject oUIObject;
     [HideInInspector]
     public int oObjectType;//0 for Flora, 1 for Fauna, 2 for Mineral
     [HideInInspector]
@@ -23,8 +19,10 @@ public class DataBaseObject:MonoBehaviour{
     [HideInInspector]
     public int oBehaviourNumber;//0 for Passive, 1 for Aggressive, 2 for Docile
     [HideInInspector]
+    public string ohabitat;
+    [HideInInspector]
     public bool oSeenByPlayer;//Whether or not the player has 'scanned' the object
-
+    
  
   
 }
