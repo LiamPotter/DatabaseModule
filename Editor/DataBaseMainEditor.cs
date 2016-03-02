@@ -7,14 +7,15 @@ public class DataBaseMainEditor : Editor {
     //This is the Editor Script for the DataBaseMain script
 
     private bool floraOpen;
-    private bool fuanaOpen;
+    private bool faunaOpen;
     private bool mineralOpen;
     //private bool[] floraInfoBools;
     public override void OnInspectorGUI()
     {
         DataBaseMain thisDataBaseMain = (DataBaseMain)target;
         //floraInfoBools = new bool[thisDataBaseMain.dObjectsFloraList.Count];
-        EditorGUILayout.PrefixLabel("Database Objects");
+        //EditorGUILayout.PrefixLabel("Database Objects");
+        GUILayout.Label("Database Objects");
         EditorGUI.indentLevel = 1;
         floraOpen =EditorGUILayout.Foldout(floraOpen, "Flora");
         // int[] floraInfoInts = new int[thisDataBaseMain.dObjectsFloraList.Count];
@@ -28,8 +29,8 @@ public class DataBaseMainEditor : Editor {
             }
         }
         EditorGUI.indentLevel = 1;
-        fuanaOpen = EditorGUILayout.Foldout(fuanaOpen, "Fuana");
-        if (fuanaOpen)
+        faunaOpen = EditorGUILayout.Foldout(faunaOpen, "Fuana");
+        if (faunaOpen)
         {
             for (int i = 0; i < thisDataBaseMain.dObjectsFaunaList.Count; i++)
             {
@@ -49,5 +50,25 @@ public class DataBaseMainEditor : Editor {
                 Debug.Log("testForMineralsOpening");
             }
         }
+
+        if (GUILayout.Button("Find Database Objects"))
+        {  
+            DataBaseMain.FindAllDatabaseObjects(thisDataBaseMain.dObjectsList);
+            DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsList); 
+            DataBaseMain.AddObjectsToSubLists(thisDataBaseMain.dObjectsList,thisDataBaseMain.dObjectsFloraList,thisDataBaseMain.dObjectsFaunaList,thisDataBaseMain.dObjectsMineralList);
+            DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsFloraList);
+            DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsFaunaList);
+            DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsMineralList);
+            DataBaseMain.RemoveDuplicatesInDataBases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsMineralList);
+            Debug.Log("HitButton");
+        }
+        if (GUILayout.Button("Reset Databases"))
+        {
+            thisDataBaseMain.dObjectsList.Clear();
+            thisDataBaseMain.dObjectsFloraList.Clear();
+            thisDataBaseMain.dObjectsFaunaList.Clear();
+            thisDataBaseMain.dObjectsMineralList.Clear();
+        }
     }
+   
 }
