@@ -5,6 +5,7 @@ public class DataBaseObject:MonoBehaviour{
 
     //[HideInInspector]
     public GameObject oUIPrefab;
+
     public GameObject oUIObject;
     [HideInInspector]
     public int oObjectType;//0 for Flora, 1 for Fauna, 2 for Mineral
@@ -20,6 +21,8 @@ public class DataBaseObject:MonoBehaviour{
     public int oBehaviourNumber;//0 for Passive, 1 for Aggressive, 2 for Docile
     [HideInInspector]
     public string ohabitat;
+    [HideInInspector]
+    public string oFloraType;
     [HideInInspector]
     public bool oSeenByPlayer;//Whether or not the player has 'scanned' the object
     

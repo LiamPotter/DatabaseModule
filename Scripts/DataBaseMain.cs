@@ -15,9 +15,11 @@ public class DataBaseMain : MonoBehaviour {
     public List<DataBaseObject> dObjectsMineralList;
 
     public GameObject dataBaseCanvasInvis;
+    
     public void Start()
     {
         dataBaseCanvasInvis = GameObject.Find("DatabaseUIPanelInvis");
+       
         ResetAllDatabases(dObjectsList, dObjectsFloraList, dObjectsFaunaList, dObjectsMineralList, dataBaseCanvasInvis);
         //Finding all of the DataBaseObjects in the scene
         FindAllDatabaseObjects(dObjectsList);
@@ -127,6 +129,7 @@ public class DataBaseMain : MonoBehaviour {
             canvas = GameObject.Find("DatabaseUIPanelInvis");
         }
         int paddingInt = 100;
+        float canvasBottom = 1;
         for (int i = 0; i < dObjectsTemp.Count; i++)
         {
             if (dObjectsTemp[i].oUIObject == null)
@@ -149,8 +152,31 @@ public class DataBaseMain : MonoBehaviour {
                 {
                     dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uName.text = dObjectsTemp[i].oName;
                     dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uIndexNumber.text = dObjectsTemp[i].oIndexNumber.ToString()+" :";
+                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().thisIndexNumber=dObjectsTemp[i].oIndexNumber;
+                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uDescription.text = dObjectsTemp[i].oDescription;
                 }
+                canvas.GetComponent<RectTransform>().offsetMin=new Vector2(canvas.GetComponent<RectTransform>().offsetMin.x, canvas.GetComponent<RectTransform>().offsetMin.y-canvasBottom*i);
+                //Debug.Log(canvas.GetComponent<RectTransform>().offsetMin);
             }
+           
+        }
+        
+
+    }
+    public static void MoveAllUIElementsDown(List<DataBaseObject> dObjectsTemp,GameObject openedObject, int selectedDataBaseObjectIndexNumber)
+    {
+        for (int i = 0; i < dObjectsTemp.Count; i++)
+        {
+            if(dObjectsTemp[i].oUIObject!=openedObject&&dObjectsTemp[i].oIndexNumber>selectedDataBaseObjectIndexNumber)
+                dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().MoveElementDown(dObjectsTemp[i].oUIObject.GetComponent<RectTransform>(),i);
+        } 
+    }
+    public static void MoveAllUIElementsUp(List<DataBaseObject> dObjectsTemp, GameObject openedObject, int selectedDataBaseObjectIndexNumber)
+    {
+        for (int i = 0; i < dObjectsTemp.Count; i++)
+        {
+            if (dObjectsTemp[i].oUIObject != openedObject && dObjectsTemp[i].oIndexNumber > selectedDataBaseObjectIndexNumber)
+                dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().MoveElementUp(dObjectsTemp[i].oUIObject.GetComponent<RectTransform>(), i);
         }
     }
 }

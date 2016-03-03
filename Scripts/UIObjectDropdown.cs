@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 using System.Collections;
 
 public class UIObjectDropdown : MonoBehaviour {
@@ -16,28 +17,53 @@ public class UIObjectDropdown : MonoBehaviour {
     //These are the GameObjects of those two changable Extra Information Blocks
     public GameObject gExtra1;
     public GameObject gExtra2;
-
- 
+    private DataBaseMain dbMain;
     [HideInInspector]
     public bool foundAllElements=false;
     public bool isOpen;
-
+    public bool completedMovement=true;
+    public float moveTimeLeft = 0.15f;
+    public int thisIndexNumber;
     void Awake()
     {
+        if(dbMain==null)
+            dbMain = FindObjectOfType<DataBaseMain>();
         if(!foundAllElements)
             FindAllNeededUIElements();
         isOpen = false;
     }
     void Update()
     {
-        Vector3 scale = infoContainer.localScale;
-        scale.y = Mathf.Lerp(scale.y,isOpen ? 1:0, Time.deltaTime * 20);
-        infoContainer.localScale = scale;
+        ToggleContainer();
+        if (!completedMovement&&isOpen)
+        {          
+            DataBaseMain.MoveAllUIElementsDown(dbMain.dObjectsList, this.gameObject,thisIndexNumber);
+            moveTimeLeft -= Time.deltaTime;
+            if (moveTimeLeft < 0)
+                completedMovement = true;           
+        }
+        if (!completedMovement && !isOpen)
+        {          
+            DataBaseMain.MoveAllUIElementsUp(dbMain.dObjectsList, this.gameObject, thisIndexNumber);
+            moveTimeLeft -= Time.deltaTime;
+            if (moveTimeLeft < 0)
+                completedMovement = true;
+        }
+
     }
     public void OnButtonPress()
     {
         //This controls whether the dropdown is open or not
+        moveTimeLeft = 0.15f;
         isOpen = !isOpen;
+        completedMovement = false;
+       
+    }
+    public void ToggleContainer()
+    {
+        Vector3 scale = infoContainer.localScale;
+        scale.y = Mathf.Lerp(scale.y, isOpen ? 1 : 0, Time.deltaTime * 17);
+        infoContainer.localScale = scale;
     }
     public void FindAllNeededUIElements()
     {
@@ -52,4 +78,25 @@ public class UIObjectDropdown : MonoBehaviour {
         gExtra2 = infoContainer.transform.FindChild("ExtraInfo2").gameObject;
         foundAllElements = true;
     }
+    public RectTransform MoveElementDown(RectTransform toMove,int indexN)
+    {
+        int paddingInt = 50;
+        Vector3 positionChange = toMove.position;
+        Vector3 targetPos = new Vector3(positionChange.x,positionChange.y-paddingInt);
+        //positionChange.y = Mathf.Lerp(positionChange.y, amountToMove-paddingInt*indexN, Time.deltaTime * 3f);
+        positionChange = Vector3.Lerp(positionChange,targetPos , Time.deltaTime * 15f);
+        toMove.position = positionChange;        
+        return toMove;
+    }
+    public RectTransform MoveElementUp(RectTransform toMove, int indexN)
+    {
+        int paddingInt = 50;
+        Vector3 positionChange = toMove.position;
+        Vector3 targetPos = new Vector3(positionChange.x, positionChange.y + paddingInt);
+        //positionChange.y = Mathf.Lerp(positionChange.y, amountToMove-paddingInt*indexN, Time.deltaTime * 3f);
+        positionChange = Vector3.Lerp(positionChange, targetPos, Time.deltaTime * 15f);
+        toMove.position = positionChange;
+        return toMove;
+    }
+
 }
