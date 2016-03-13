@@ -7,6 +7,7 @@ public class UIObjectDropdown : MonoBehaviour {
 
     //These are the variables of the actual UI elements themselves, not the text that they hold
     public RectTransform infoContainer;
+
     public Text uIndexNumber;
     public Text uName;
     public Text uDescription;
@@ -22,7 +23,11 @@ public class UIObjectDropdown : MonoBehaviour {
     public bool foundAllElements=false;
     public bool isOpen;
     public bool completedMovement=true;
-    public float moveTimeLeft = 0.15f;
+    public float moveTimeLeft;
+    private float privateMoveTime;
+    private float interactLockTime = 0.5f;
+    private float iLockUse;
+    public Vector3 posChange;
     public int thisIndexNumber;
     void Awake()
     {
@@ -35,34 +40,42 @@ public class UIObjectDropdown : MonoBehaviour {
     void Update()
     {
         ToggleContainer();
-        if (!completedMovement&&isOpen)
-        {          
-            DataBaseMain.MoveAllUIElementsDown(dbMain.dObjectsList, this.gameObject,thisIndexNumber);
-            moveTimeLeft -= Time.deltaTime;
-            if (moveTimeLeft < 0)
-                completedMovement = true;           
+        if(iLockUse>0)
+        {
+            GetComponent<Button>().interactable = false;
+            iLockUse -= Time.deltaTime;
         }
-        if (!completedMovement && !isOpen)
-        {          
-            DataBaseMain.MoveAllUIElementsUp(dbMain.dObjectsList, this.gameObject, thisIndexNumber);
-            moveTimeLeft -= Time.deltaTime;
-            if (moveTimeLeft < 0)
+        else GetComponent<Button>().interactable = true;
+        if (!completedMovement&&isOpen)
+        {
+            DataBaseMain.MoveAllUIElementsDown(dbMain.dObjectsList, this.gameObject,thisIndexNumber);
+            privateMoveTime -= Time.deltaTime;
+            if (privateMoveTime <= 0)
                 completedMovement = true;
         }
+        if (!completedMovement && !isOpen)
+        {
+            DataBaseMain.MoveAllUIElementsUp(dbMain.dObjectsList, this.gameObject, thisIndexNumber);
+            privateMoveTime -= Time.deltaTime;
+            if (privateMoveTime <= 0)
+                completedMovement = true;
+        }
+       
 
     }
     public void OnButtonPress()
     {
         //This controls whether the dropdown is open or not
-        moveTimeLeft = 0.15f;
+        privateMoveTime = moveTimeLeft;
         isOpen = !isOpen;
         completedMovement = false;
-       
+        iLockUse = interactLockTime;
+
     }
     public void ToggleContainer()
     {
         Vector3 scale = infoContainer.localScale;
-        scale.y = Mathf.Lerp(scale.y, isOpen ? 1 : 0, Time.deltaTime * 17);
+        scale.y = Mathf.Lerp(scale.y, isOpen ? 1 : 0, Time.deltaTime * 18);
         infoContainer.localScale = scale;
     }
     public void FindAllNeededUIElements()
@@ -80,22 +93,22 @@ public class UIObjectDropdown : MonoBehaviour {
     }
     public RectTransform MoveElementDown(RectTransform toMove,int indexN)
     {
-        int paddingInt = 50;
-        Vector3 positionChange = toMove.position;
-        Vector3 targetPos = new Vector3(positionChange.x,positionChange.y-paddingInt);
+        int paddingInt = 100;
+        posChange= toMove.localPosition;
+        Vector3 targetPos = new Vector3(posChange.x, posChange.y - paddingInt);
         //positionChange.y = Mathf.Lerp(positionChange.y, amountToMove-paddingInt*indexN, Time.deltaTime * 3f);
-        positionChange = Vector3.Lerp(positionChange,targetPos , Time.deltaTime * 15f);
-        toMove.position = positionChange;        
+        posChange = Vector3.Lerp(posChange, targetPos , Time.deltaTime * 11f);
+        toMove.localPosition = posChange;
         return toMove;
     }
     public RectTransform MoveElementUp(RectTransform toMove, int indexN)
     {
-        int paddingInt = 50;
-        Vector3 positionChange = toMove.position;
-        Vector3 targetPos = new Vector3(positionChange.x, positionChange.y + paddingInt);
+        int paddingInt = 100;
+        posChange = toMove.localPosition;
+        Vector3 targetPos = new Vector3(posChange.x, posChange.y + paddingInt);
         //positionChange.y = Mathf.Lerp(positionChange.y, amountToMove-paddingInt*indexN, Time.deltaTime * 3f);
-        positionChange = Vector3.Lerp(positionChange, targetPos, Time.deltaTime * 15f);
-        toMove.position = positionChange;
+        posChange = Vector3.Lerp(posChange, targetPos, Time.deltaTime * 11f);
+        toMove.localPosition = posChange;
         return toMove;
     }
 

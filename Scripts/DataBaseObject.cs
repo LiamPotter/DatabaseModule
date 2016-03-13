@@ -8,7 +8,7 @@ public class DataBaseObject:MonoBehaviour{
 
     public GameObject oUIObject;
     [HideInInspector]
-    public int oObjectType;//0 for Flora, 1 for Fauna, 2 for Mineral
+    public int oObjectType;//0 for Flora, 1 for Fauna, 2 for Planet
     [HideInInspector]
     public string oName;
     [HideInInspector]
@@ -20,9 +20,13 @@ public class DataBaseObject:MonoBehaviour{
     [HideInInspector]
     public int oBehaviourNumber;//0 for Passive, 1 for Aggressive, 2 for Docile
     [HideInInspector]
-    public string ohabitat;
+    public string oFlorahabitat;
     [HideInInspector]
-    public string oFloraType;
+    public int oFloraType;
+    [HideInInspector]
+    public int oPlanetLifeFormAmount;
+    [HideInInspector]
+    public bool oPlanetSignsOfIntelligence;
     [HideInInspector]
     public bool oSeenByPlayer;//Whether or not the player has 'scanned' the object
     

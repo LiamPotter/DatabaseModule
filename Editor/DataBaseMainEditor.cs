@@ -9,7 +9,7 @@ public class DataBaseMainEditor : Editor {
 
     private bool floraOpen;
     private bool faunaOpen;
-    private bool mineralOpen;
+    private bool planetOpen;
     private DataBaseMain thisDataBaseMain;
     public override void OnInspectorGUI()
     {
@@ -38,14 +38,14 @@ public class DataBaseMainEditor : Editor {
             }
         }
         EditorGUI.indentLevel = 1;
-        mineralOpen = EditorGUILayout.Foldout(mineralOpen, "Minerals");
-        if(mineralOpen)
+        planetOpen = EditorGUILayout.Foldout(planetOpen, "Planets");
+        if(planetOpen)
         {
-            for (int i = 0; i < thisDataBaseMain.dObjectsMineralList.Count; i++)
+            for (int i = 0; i < thisDataBaseMain.dObjectsPlanetList.Count; i++)
             {
                 EditorGUI.indentLevel = 2;
-                EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsMineralList[i].oName);
-                Debug.Log("testForMineralsOpening");
+                EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsPlanetList[i].oName);
+                Debug.Log("testForPlanetsOpening");
             }
         }
 
@@ -53,14 +53,14 @@ public class DataBaseMainEditor : Editor {
         {  
             DataBaseMain.FindAllDatabaseObjects(thisDataBaseMain.dObjectsList);
             DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsList); 
-            DataBaseMain.AddObjectsToSubLists(thisDataBaseMain.dObjectsList,thisDataBaseMain.dObjectsFloraList,thisDataBaseMain.dObjectsFaunaList,thisDataBaseMain.dObjectsMineralList);
+            DataBaseMain.AddObjectsToSubLists(thisDataBaseMain.dObjectsList,thisDataBaseMain.dObjectsFloraList,thisDataBaseMain.dObjectsFaunaList,thisDataBaseMain.dObjectsPlanetList);
             DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsFloraList);
             DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsFaunaList);
-            DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsMineralList);
-            DataBaseMain.RemoveDuplicatesInDataBases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsMineralList);
+            DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsPlanetList);
+            DataBaseMain.RemoveDuplicatesInDataBases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsPlanetList);
             floraOpen = true;
             faunaOpen = true;
-            mineralOpen = true;
+            planetOpen = true;
             Debug.Log("HitButton");
         }
         if (GUILayout.Button("Instantiate UI"))
@@ -77,7 +77,7 @@ public class DataBaseMainEditor : Editor {
         }
         if (GUILayout.Button("Reset Everything"))
         {
-            DataBaseMain.ResetAllDatabases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsMineralList, thisDataBaseMain.dataBaseCanvasInvis);
+            DataBaseMain.ResetAllDatabases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsPlanetList, thisDataBaseMain.dataBaseCanvasInvis);
         }
     }
    

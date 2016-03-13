@@ -12,7 +12,7 @@ public class DataBaseMain : MonoBehaviour {
 
     public List<DataBaseObject> dObjectsFaunaList;
 
-    public List<DataBaseObject> dObjectsMineralList;
+    public List<DataBaseObject> dObjectsPlanetList;
 
     public GameObject dataBaseCanvasInvis;
     
@@ -20,15 +20,15 @@ public class DataBaseMain : MonoBehaviour {
     {
         dataBaseCanvasInvis = GameObject.Find("DatabaseUIPanelInvis");
        
-        ResetAllDatabases(dObjectsList, dObjectsFloraList, dObjectsFaunaList, dObjectsMineralList, dataBaseCanvasInvis);
+        ResetAllDatabases(dObjectsList, dObjectsFloraList, dObjectsFaunaList, dObjectsPlanetList, dataBaseCanvasInvis);
         //Finding all of the DataBaseObjects in the scene
         FindAllDatabaseObjects(dObjectsList);
         //Sorting the List by the oName variable in each DataBaseObject
         SortAllDataBaseObjects(dObjectsList);
         //Adds the objects into various Lists depending on their Type
-        AddObjectsToSubLists(dObjectsList, dObjectsFloraList, dObjectsFaunaList, dObjectsMineralList);
+        AddObjectsToSubLists(dObjectsList, dObjectsFloraList, dObjectsFaunaList, dObjectsPlanetList);
         //Removing all duplicates in the list by comparing the oName variables on each DataBaseObject in the List
-        RemoveDuplicatesInDataBases(dObjectsList,dObjectsFloraList,dObjectsFaunaList,dObjectsMineralList);
+        RemoveDuplicatesInDataBases(dObjectsList,dObjectsFloraList,dObjectsFaunaList,dObjectsPlanetList);
         //Adding all objects in the database to their respective UI elements
         InstantiateUIElements(dObjectsList,dataBaseCanvasInvis);
     }
@@ -140,20 +140,61 @@ public class DataBaseMain : MonoBehaviour {
                 dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 90);
                 dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                 if (dObjectsTemp[i] == dObjectsTemp[0])
-                    dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-277, -175, 0);
+                    dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -155, 0);
                 else
                 {
-                    dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-277, -175-paddingInt*i, 0);
+                    dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -155-paddingInt*i, 0);
                 }
                
                 dObjectsTemp[i].oUIObject.name = dObjectsTemp[i].oName + " UI";
-                dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().FindAllNeededUIElements();
-                if (dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().foundAllElements)
+                dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().FindAllNeededUIElements();
+                if (dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().foundAllElements)
                 {
-                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uName.text = dObjectsTemp[i].oName;
-                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uIndexNumber.text = dObjectsTemp[i].oIndexNumber.ToString()+" :";
-                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().thisIndexNumber=dObjectsTemp[i].oIndexNumber;
-                    dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().uDescription.text = dObjectsTemp[i].oDescription;
+                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uName.text = dObjectsTemp[i].oName;
+                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uIndexNumber.text = dObjectsTemp[i].oIndexNumber.ToString()+" :";
+                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().thisIndexNumber=dObjectsTemp[i].oIndexNumber;
+                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uDescription.text = dObjectsTemp[i].oDescription;
+                    switch (dObjectsTemp[i].oObjectType)
+                    {
+                        case 2:
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uObjectType.text = "Planet";
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = dObjectsTemp[i].oPlanetLifeFormAmount.ToString();
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = dObjectsTemp[i].oPlanetSignsOfIntelligence.ToString();
+                            break;
+                        case 1:
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uObjectType.text = "Fauna";
+                            switch (dObjectsTemp[i].oDiet)
+                            {
+                                case 2:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Carnivore";
+                                    break;
+                                case 1:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Herbivore";
+                                    break;
+                                default:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Omnivore";
+                                    break;
+                            }
+                            switch (dObjectsTemp[i].oBehaviourNumber)
+                            {
+                                case 2:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Docile";
+                                    break;
+                                    
+                                case 1:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Aggressive";
+                                    break;
+                                default:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Passive";
+                                    break;
+                            }
+                            
+                            break;
+                        default:
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uObjectType.text = "Flora";
+                            break;
+                    }
+                   
                 }
                 canvas.GetComponent<RectTransform>().offsetMin=new Vector2(canvas.GetComponent<RectTransform>().offsetMin.x, canvas.GetComponent<RectTransform>().offsetMin.y-canvasBottom*i);
                 //Debug.Log(canvas.GetComponent<RectTransform>().offsetMin);
@@ -167,16 +208,16 @@ public class DataBaseMain : MonoBehaviour {
     {
         for (int i = 0; i < dObjectsTemp.Count; i++)
         {
-            if(dObjectsTemp[i].oUIObject!=openedObject&&dObjectsTemp[i].oIndexNumber>selectedDataBaseObjectIndexNumber)
-                dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().MoveElementDown(dObjectsTemp[i].oUIObject.GetComponent<RectTransform>(),i);
+            if(dObjectsTemp[i].oUIObject!=openedObject&& dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().completedMovement&&dObjectsTemp[i].oIndexNumber>selectedDataBaseObjectIndexNumber)
+                dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().MoveElementDown(dObjectsTemp[i].oUIObject.GetComponent<RectTransform>(),i);
         } 
     }
     public static void MoveAllUIElementsUp(List<DataBaseObject> dObjectsTemp, GameObject openedObject, int selectedDataBaseObjectIndexNumber)
     {
         for (int i = 0; i < dObjectsTemp.Count; i++)
         {
-            if (dObjectsTemp[i].oUIObject != openedObject && dObjectsTemp[i].oIndexNumber > selectedDataBaseObjectIndexNumber)
-                dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().MoveElementUp(dObjectsTemp[i].oUIObject.GetComponent<RectTransform>(), i);
+            if (dObjectsTemp[i].oUIObject != openedObject && dObjectsTemp[i].oUIObject.GetComponent<UIObjectDropdown>().completedMovement && dObjectsTemp[i].oIndexNumber > selectedDataBaseObjectIndexNumber)
+                dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().MoveElementUp(dObjectsTemp[i].oUIObject.GetComponent<RectTransform>(), i);
         }
     }
 }
