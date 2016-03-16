@@ -32,7 +32,7 @@ public class DataBaseMain : MonoBehaviour {
         //Adding all objects in the database to their respective UI elements
         InstantiateUIElements(dObjectsList,dataBaseCanvasInvis);
     }
-    public static void ResetAllDatabases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp,GameObject invisCanvas)
+    public static void ResetAllDatabases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsPlanetTemp,GameObject invisCanvas)
     {
         if (invisCanvas == null)
             invisCanvas = GameObject.Find("DatabaseUIPanelInvis");
@@ -43,7 +43,7 @@ public class DataBaseMain : MonoBehaviour {
         dObjectsTemp.Clear();
         dObjectsFloraTemp.Clear();
         dObjectsFaunaTemp.Clear();
-        dObjectsMineralTemp.Clear();
+        dObjectsPlanetTemp.Clear();
 
         List<GameObject> children = new List<GameObject>();
         foreach (Transform child in invisCanvas.transform) children.Add(child.gameObject);
@@ -68,7 +68,7 @@ public class DataBaseMain : MonoBehaviour {
             else return x.oName.CompareTo(y.oName);
         });
     }  
-    public static void AddObjectsToSubLists(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp)
+    public static void AddObjectsToSubLists(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsPlanetTemp)
     {
         for (int i = 0; i < dObjectsTemp.Count; i++)
         {
@@ -82,12 +82,12 @@ public class DataBaseMain : MonoBehaviour {
             }
             if (dObjectsTemp[i].oObjectType == 2)
             {
-                dObjectsMineralTemp.Add(dObjectsTemp[i]);
+                dObjectsPlanetTemp.Add(dObjectsTemp[i]);
             }
-            dObjectsTemp[i].oIndexNumber = 1+i;
+            
         }
     }
-    public static void RemoveDuplicatesInDataBases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp)
+    public static void RemoveDuplicatesInDataBases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsPlanetTemp)
     {
         short indexO = 0;
         while (indexO < dObjectsTemp.Count - 1)
@@ -114,10 +114,10 @@ public class DataBaseMain : MonoBehaviour {
                 indexFau++;
         }
         short indexMin = 0;
-        while (indexMin < dObjectsMineralTemp.Count - 1)
+        while (indexMin < dObjectsPlanetTemp.Count - 1)
         {
-            if (dObjectsMineralTemp[indexMin].oName == dObjectsMineralTemp[indexMin + 1].oName)
-                dObjectsMineralTemp.RemoveAt(indexMin);
+            if (dObjectsPlanetTemp[indexMin].oName == dObjectsPlanetTemp[indexMin + 1].oName)
+                dObjectsPlanetTemp.RemoveAt(indexMin);
             else
                 indexMin++;
         }
@@ -134,6 +134,7 @@ public class DataBaseMain : MonoBehaviour {
         {
             if (dObjectsTemp[i].oUIObject == null)
             {
+                dObjectsTemp[i].oIndexNumber = 1 + i;
                 dObjectsTemp[i].oUIObject = (GameObject)Instantiate(dObjectsTemp[i].oUIPrefab);
                 dObjectsTemp[i].oUIObject.transform.SetParent(canvas.transform);
                 dObjectsTemp[i].oUIObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1156);
@@ -158,40 +159,54 @@ public class DataBaseMain : MonoBehaviour {
                     {
                         case 2:
                             dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uObjectType.text = "Planet";
-                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = dObjectsTemp[i].oPlanetLifeFormAmount.ToString();
-                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = dObjectsTemp[i].oPlanetSignsOfIntelligence.ToString();
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Life Form Amount: "+dObjectsTemp[i].oPlanetLifeFormAmount.ToString();
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Signs of Intelligence: "+dObjectsTemp[i].oPlanetSignsOfIntelligence.ToString();
                             break;
                         case 1:
                             dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uObjectType.text = "Fauna";
                             switch (dObjectsTemp[i].oDiet)
                             {
                                 case 2:
-                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Carnivore";
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Diet: Carnivore";
                                     break;
                                 case 1:
-                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Herbivore";
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Diet: Herbivore";
                                     break;
                                 default:
-                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Omnivore";
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Diet: Omnivore";
                                     break;
                             }
                             switch (dObjectsTemp[i].oBehaviourNumber)
                             {
                                 case 2:
-                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Docile";
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Behaviour: Docile";
                                     break;
                                     
                                 case 1:
-                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Aggressive";
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Behaviour: Aggressive";
                                     break;
                                 default:
-                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Passive";
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Behaviour: Passive";
                                     break;
                             }
                             
                             break;
                         default:
                             dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uObjectType.text = "Flora";
+                            switch (dObjectsTemp[i].oFloraType)
+                            {
+                                case 2:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Type: Tree";
+                                    break;
+
+                                case 1:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Type: Flower";
+                                    break;
+                                default:
+                                    dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra1.text = "Type: Fungus";
+                                    break;
+                            }
+                            dObjectsTemp[i].oUIObject.GetComponentInChildren<UIObjectDropdown>().uExtra2.text = "Habitat: " + dObjectsTemp[i].oFlorahabitat;
                             break;
                     }
                    

@@ -55,7 +55,7 @@ public class DataBaseObjectEditor : Editor {
             hidingFloraInt = 0;
         }
         else hidingFloraInt = 1;
-        //This will hide the Diet Popup if the object is a plant, because plants do eat things... usually
+        //This will hide the Diet Popup if the object is a plant, because plants do not eat things... usually
         if (selectedObjectType!=1)
         {
             hidingFaunaInt = 0;

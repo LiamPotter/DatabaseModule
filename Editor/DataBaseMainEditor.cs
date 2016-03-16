@@ -7,6 +7,7 @@ using UnityEditor;
 public class DataBaseMainEditor : Editor {
     //This is the Editor Script for the DataBaseMain script
 
+    private bool objectOpen;
     private bool floraOpen;
     private bool faunaOpen;
     private bool planetOpen;
@@ -16,6 +17,16 @@ public class DataBaseMainEditor : Editor {
         thisDataBaseMain = (DataBaseMain)target;
         GUILayout.Label("Database Objects");
         EditorGUI.indentLevel = 1;
+        objectOpen = EditorGUILayout.Foldout(objectOpen, "Objects");
+        if (objectOpen)
+        {
+            for (int i = 0; i < thisDataBaseMain.dObjectsList.Count; i++)
+            {
+                EditorGUI.indentLevel = 2;
+                EditorGUILayout.Foldout(false, (thisDataBaseMain.dObjectsList[i].oIndexNumber+" "+thisDataBaseMain.dObjectsList[i].oName));
+            }
+        }
+        EditorGUI.indentLevel = 1;
         floraOpen =EditorGUILayout.Foldout(floraOpen, "Flora");
         if (floraOpen)
         {
@@ -23,7 +34,7 @@ public class DataBaseMainEditor : Editor {
             {
                 EditorGUI.indentLevel = 2;
                 EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsFloraList[i].oName);
-                Debug.Log("testForFloraOpening");
+                
             }
         }
         EditorGUI.indentLevel = 1;
@@ -34,7 +45,7 @@ public class DataBaseMainEditor : Editor {
             {
                 EditorGUI.indentLevel = 2;
                 EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsFaunaList[i].oName);
-                Debug.Log("testForFuanaOpening");
+               
             }
         }
         EditorGUI.indentLevel = 1;
@@ -44,10 +55,10 @@ public class DataBaseMainEditor : Editor {
             for (int i = 0; i < thisDataBaseMain.dObjectsPlanetList.Count; i++)
             {
                 EditorGUI.indentLevel = 2;
-                EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsPlanetList[i].oName);
-                Debug.Log("testForPlanetsOpening");
+                EditorGUILayout.Foldout(false, thisDataBaseMain.dObjectsPlanetList[i].oName);             
             }
         }
+        EditorGUI.indentLevel = 1;
 
         if (GUILayout.Button("Find Database Objects"))
         {  
@@ -58,6 +69,7 @@ public class DataBaseMainEditor : Editor {
             DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsFaunaList);
             DataBaseMain.SortAllDataBaseObjects(thisDataBaseMain.dObjectsPlanetList);
             DataBaseMain.RemoveDuplicatesInDataBases(thisDataBaseMain.dObjectsList, thisDataBaseMain.dObjectsFloraList, thisDataBaseMain.dObjectsFaunaList, thisDataBaseMain.dObjectsPlanetList);
+            objectOpen = true;
             floraOpen = true;
             faunaOpen = true;
             planetOpen = true;
