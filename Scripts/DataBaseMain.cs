@@ -32,7 +32,7 @@ public class DataBaseMain : MonoBehaviour {
         //Adding all objects in the database to their respective UI elements
         InstantiateUIElements(dObjectsList,dataBaseCanvasInvis);
     }
-    public static void ResetAllDatabases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp,GameObject invisCanvas)
+    public static void ResetAllDatabases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsPlanetTemp,GameObject invisCanvas)
     {
         if (invisCanvas == null)
             invisCanvas = GameObject.Find("DatabaseUIPanelInvis");
@@ -43,7 +43,7 @@ public class DataBaseMain : MonoBehaviour {
         dObjectsTemp.Clear();
         dObjectsFloraTemp.Clear();
         dObjectsFaunaTemp.Clear();
-        dObjectsMineralTemp.Clear();
+        dObjectsPlanetTemp.Clear();
 
         List<GameObject> children = new List<GameObject>();
         foreach (Transform child in invisCanvas.transform) children.Add(child.gameObject);
@@ -68,7 +68,7 @@ public class DataBaseMain : MonoBehaviour {
             else return x.oName.CompareTo(y.oName);
         });
     }  
-    public static void AddObjectsToSubLists(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp)
+    public static void AddObjectsToSubLists(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsPlanetTemp)
     {
         for (int i = 0; i < dObjectsTemp.Count; i++)
         {
@@ -82,12 +82,12 @@ public class DataBaseMain : MonoBehaviour {
             }
             if (dObjectsTemp[i].oObjectType == 2)
             {
-                dObjectsMineralTemp.Add(dObjectsTemp[i]);
+                dObjectsPlanetTemp.Add(dObjectsTemp[i]);
             }
             
         }
     }
-    public static void RemoveDuplicatesInDataBases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsMineralTemp)
+    public static void RemoveDuplicatesInDataBases(List<DataBaseObject> dObjectsTemp, List<DataBaseObject> dObjectsFloraTemp, List<DataBaseObject> dObjectsFaunaTemp, List<DataBaseObject> dObjectsPlanetTemp)
     {
         short indexO = 0;
         while (indexO < dObjectsTemp.Count - 1)
@@ -114,10 +114,10 @@ public class DataBaseMain : MonoBehaviour {
                 indexFau++;
         }
         short indexMin = 0;
-        while (indexMin < dObjectsMineralTemp.Count - 1)
+        while (indexMin < dObjectsPlanetTemp.Count - 1)
         {
-            if (dObjectsMineralTemp[indexMin].oName == dObjectsMineralTemp[indexMin + 1].oName)
-                dObjectsMineralTemp.RemoveAt(indexMin);
+            if (dObjectsPlanetTemp[indexMin].oName == dObjectsPlanetTemp[indexMin + 1].oName)
+                dObjectsPlanetTemp.RemoveAt(indexMin);
             else
                 indexMin++;
         }

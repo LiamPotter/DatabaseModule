@@ -3,10 +3,10 @@ using System.Collections;
 
 public class DataBaseObject:MonoBehaviour{
 
-    //[HideInInspector]
-    public GameObject oUIPrefab;
-
-    public GameObject oUIObject;
+    [HideInInspector]
+    public GameObject oUIPrefab;//the UI prefab
+    [HideInInspector]
+    public GameObject oUIObject;//the actual UI gameobject
     [HideInInspector]
     public int oObjectType;//0 for Flora, 1 for Fauna, 2 for Planet
     [HideInInspector]
